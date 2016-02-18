@@ -6,6 +6,7 @@ public class BoardController : MonoBehaviour
 {
     public GameObject tilePrefab;
     public Text minesText;
+    public Text endgameText;
     public int numMines;
     const int DIMENSIONS = 10;
     const float TILE_OFFSET = 0.4f;
@@ -14,6 +15,7 @@ public class BoardController : MonoBehaviour
     private TileController[,] grid;
     private Dictionary<TileController, Position> tilePositionMap;
     private int[,] mineGrid;
+    private TileController[] mineTiles;
     private int flaggedMines;
 
     // Use this for initialization
@@ -28,6 +30,7 @@ public class BoardController : MonoBehaviour
         AssignMines();
         PrecomputeMineCount();
         SetMinesText();
+        endgameText.text = "";
     }
 
     // Update is called once per frame
@@ -35,9 +38,17 @@ public class BoardController : MonoBehaviour
     {
     }
 
-    public void Explode()
+    public void Explode(TileController bombTile)
     {
-        Debug.Log("Boom!");
+        foreach(TileController tile in mineTiles)
+        {
+            if (tile != bombTile)
+            {
+                tile.ReplaceSprite("tileBombMark");
+            }
+        }
+
+        endgameText.text = "Sorry, You Lose";
     }
 
     public int GetMineCount(TileController tile)
@@ -85,6 +96,7 @@ public class BoardController : MonoBehaviour
 
     private void AssignMines()
     {
+        mineTiles = new TileController[numMines];
         List<TileController> unassignedTiles = new List<TileController>();
         foreach (TileController tile in tiles)
         {
@@ -97,6 +109,7 @@ public class BoardController : MonoBehaviour
             TileController tile = unassignedTiles[index];
             unassignedTiles.RemoveAt(index);
             tile.isMined = true;
+            mineTiles[i] = tile;
         }
         foreach (TileController tile in unassignedTiles)
         {

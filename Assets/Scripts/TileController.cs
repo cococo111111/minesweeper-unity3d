@@ -61,7 +61,8 @@ public class TileController : MonoBehaviour
         }
         else if (isMined)
         {
-            board.Explode();
+            ReplaceSprite("tileExplosion");
+            board.Explode(this);
         }
         else
         {
