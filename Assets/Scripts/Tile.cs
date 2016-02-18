@@ -62,19 +62,23 @@ public class Tile : MonoBehaviour
         ReplaceSprite("tileBombMark");
     }
 
-    public void Uncover(bool empty = false)
+    public void Uncover(bool boardAction = false)
     {
         if (state == State.Flagged)
         {
             return;
         }
-        else if (isMined && !empty)
+        else if (isMined)
         {
             state = State.Exploded;
             ReplaceSprite("tileExplosion");
             board.Explode(this);
         }
-        else
+        else if (state == State.Uncovered && !boardAction)
+        {
+            board.UncoverUnflaggedNeighbors(this);
+        }
+        else if (state == State.Covered)
         {
             int mines = board.GetMineCount(this);
             string spriteName = "tile";

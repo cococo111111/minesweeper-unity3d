@@ -107,6 +107,31 @@ public class Board : MonoBehaviour
         }
     }
 
+    public void UncoverUnflaggedNeighbors(Tile tile)
+    {
+        Position pos;
+        tilePositionMap.TryGetValue(tile, out pos);
+        int mineCount = GetMineCount(tile);
+        int flagCount = 0;
+        List<Tile> neighbors = Neighbors(pos);
+
+        foreach (Tile neighborTile in neighbors)
+        {
+            if (neighborTile.state == Tile.State.Flagged)
+            {
+                flagCount++;
+            }
+        }
+
+        if (flagCount == mineCount)
+        {
+            foreach (Tile neighborTile in neighbors)
+            {
+                neighborTile.Uncover(true);
+            }
+        }
+    }
+
     private void CreateTiles()
     {
         float cameraOffset = DIMENSIONS / 2.0f * TILE_OFFSET;
