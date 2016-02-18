@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class BoardController : MonoBehaviour
 {
-    public enum State {Playing, Win, Lose};
+    public enum State { Playing, Win, Lose };
     public GameObject tilePrefab;
     public Text minesText;
     public Text endgameText;
@@ -43,7 +43,7 @@ public class BoardController : MonoBehaviour
 
     public void Explode(TileController bombTile)
     {
-        foreach(TileController tile in mineTiles)
+        foreach (TileController tile in mineTiles)
         {
             if (tile != bombTile)
             {
