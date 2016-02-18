@@ -60,13 +60,13 @@ public class TileController : MonoBehaviour
         spriteRenderer.sprite = sprite;
     }
 
-    private void Uncover()
+    public void Uncover(bool empty = false)
     {
         if (state == State.Flagged)
         {
             Debug.Log("Can't click on flagged tiles.");
         }
-        else if (isMined)
+        else if (isMined && !empty)
         {
             state = State.Exploded;
             ReplaceSprite("tileExplosion");
@@ -82,6 +82,10 @@ public class TileController : MonoBehaviour
                 state = State.Uncovered;
                 spriteName += words[mines];
                 ReplaceSprite(spriteName);
+                if (mines == 0)
+                {
+                    board.UncoverEmptyNeighbors(this);
+                }
             }
             else
             {

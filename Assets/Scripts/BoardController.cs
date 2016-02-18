@@ -74,6 +74,20 @@ public class BoardController : MonoBehaviour
         SetMinesText();
     }
 
+    public void UncoverEmptyNeighbors(TileController tile)
+    {
+        Position pos;
+        tilePositionMap.TryGetValue(tile, out pos);
+
+        foreach (TileController neighborTile in Neighbors(pos))
+        {
+            if (GetMineCount(neighborTile) == 0 && neighborTile.state == TileController.State.Covered)
+            {
+                neighborTile.Uncover(true);
+            }
+        }
+    }
+
     private void CreateTiles()
     {
         float cameraOffset = DIMENSIONS / 2.0f * TILE_OFFSET;
@@ -136,6 +150,21 @@ public class BoardController : MonoBehaviour
     {
         int count = 0;
 
+        foreach (TileController tile in Neighbors(pos))
+        {
+            if (tile.isMined)
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    private List<TileController> Neighbors(Position pos)
+    {
+        List<TileController> neighbors = new List<TileController>();
+
         for (int x = -1; x <= 1; x++)
         {
             for (int y = -1; y <= 1; y++)
@@ -143,15 +172,12 @@ public class BoardController : MonoBehaviour
                 Position neighbor = new Position(pos.x + x, pos.y + y);
                 if (neighbor.x >= 0 && neighbor.y >= 0 && neighbor.x < DIMENSIONS && neighbor.y < DIMENSIONS)
                 {
-                    if (grid[neighbor.x, neighbor.y].isMined)
-                    {
-                        count++;
-                    }
+                    neighbors.Add(grid[neighbor.x, neighbor.y]);
                 }
             }
         }
 
-        return count;
+        return neighbors;
     }
 
     private void SetMinesText()
