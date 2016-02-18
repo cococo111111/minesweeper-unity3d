@@ -81,11 +81,13 @@ public class TileController : MonoBehaviour
         Debug.Log("Clicked: " + isMined);
         if (isFlagged)
         {
+            board.IncrementMines();
             isFlagged = false;
             ReplaceSprite("tile");
         }
         else
         {
+            board.DecrementMines();
             isFlagged = true;
             ReplaceSprite("tileFlag");
         }

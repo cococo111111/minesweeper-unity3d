@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 
 public class BoardController : MonoBehaviour
 {
     public GameObject tilePrefab;
+    public Text minesText;
     public int numMines;
     const int DIMENSIONS = 10;
     const float TILE_OFFSET = 0.5f;
@@ -12,6 +14,7 @@ public class BoardController : MonoBehaviour
     private TileController[,] grid;
     private Dictionary<TileController, Position> tilePositionMap;
     private int[,] mineGrid;
+    private int flaggedMines;
 
     // Use this for initialization
     void Start()
@@ -20,9 +23,11 @@ public class BoardController : MonoBehaviour
         grid = new TileController[DIMENSIONS, DIMENSIONS];
         tilePositionMap = new Dictionary<TileController, Position>();
         mineGrid = new int[DIMENSIONS, DIMENSIONS];
+        flaggedMines = numMines;
         CreateTiles();
         AssignMines();
         PrecomputeMineCount();
+        SetMinesText();
     }
 
     // Update is called once per frame
@@ -40,6 +45,18 @@ public class BoardController : MonoBehaviour
         Position pos;
         tilePositionMap.TryGetValue(tile, out pos);
         return mineGrid[pos.x, pos.y];
+    }
+
+    public void IncrementMines()
+    {
+        flaggedMines++;
+        SetMinesText();
+    }
+
+    public void DecrementMines()
+    {
+        flaggedMines--;
+        SetMinesText();
     }
 
     private void CreateTiles()
@@ -118,6 +135,11 @@ public class BoardController : MonoBehaviour
         }
 
         return count;
+    }
+
+    private void SetMinesText()
+    {
+        minesText.text = "Mines: " + flaggedMines;
     }
 
     private void PrintBoard()
