@@ -18,6 +18,7 @@ public class BoardController : MonoBehaviour
     private Dictionary<TileController, Position> tilePositionMap;
     private int[,] mineGrid;
     private TileController[] mineTiles;
+    private List<TileController> nonMineTiles;
     private int flaggedMines;
 
     // Use this for initialization
@@ -53,6 +54,20 @@ public class BoardController : MonoBehaviour
 
         endgameText.text = "Sorry, You Lose";
         state = State.Lose;
+    }
+
+    public void CheckWin()
+    {
+        foreach (TileController tile in nonMineTiles)
+        {
+            if (tile.state != TileController.State.Uncovered)
+            {
+                return;
+            }
+        }
+
+        state = State.Win;
+        endgameText.text = "Congrats, You Win!";
     }
 
     public int GetMineCount(TileController tile)
@@ -115,21 +130,21 @@ public class BoardController : MonoBehaviour
     private void AssignMines()
     {
         mineTiles = new TileController[numMines];
-        List<TileController> unassignedTiles = new List<TileController>();
+        nonMineTiles = new List<TileController>();
         foreach (TileController tile in tiles)
         {
-            unassignedTiles.Add(tile);
+            nonMineTiles.Add(tile);
         }
 
         for (int i = 0; i < numMines; i++)
         {
-            int index = (int)Mathf.Round(Random.Range(0, unassignedTiles.Count));
-            TileController tile = unassignedTiles[index];
-            unassignedTiles.RemoveAt(index);
+            int index = (int)Mathf.Round(Random.Range(0, nonMineTiles.Count));
+            TileController tile = nonMineTiles[index];
+            nonMineTiles.RemoveAt(index);
             tile.isMined = true;
             mineTiles[i] = tile;
         }
-        foreach (TileController tile in unassignedTiles)
+        foreach (TileController tile in nonMineTiles)
         {
             tile.isMined = false;
         }

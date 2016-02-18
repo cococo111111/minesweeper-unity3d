@@ -86,6 +86,7 @@ public class TileController : MonoBehaviour
                 {
                     board.UncoverEmptyNeighbors(this);
                 }
+                board.CheckWin();
             }
             else
             {
