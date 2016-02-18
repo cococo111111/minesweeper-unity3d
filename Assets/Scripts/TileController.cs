@@ -82,7 +82,6 @@ public class TileController : MonoBehaviour
 
     private void SetFlag()
     {
-        Debug.Log("Clicked: " + isMined);
         if (isFlagged)
         {
             board.IncrementMines();
