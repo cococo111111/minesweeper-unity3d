@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-public class BoardController : MonoBehaviour
+public class Board : MonoBehaviour
 {
     public enum State { FirstTurn, Playing, Win, Lose };
     public GameObject tilePrefab;
@@ -13,20 +13,20 @@ public class BoardController : MonoBehaviour
     const int DIMENSIONS = 10;
     const float TILE_OFFSET = 0.4f;
 
-    private TileController[] tiles;
-    private TileController[,] grid;
-    private Dictionary<TileController, Position> tilePositionMap;
+    private Tile[] tiles;
+    private Tile[,] grid;
+    private Dictionary<Tile, Position> tilePositionMap;
     private int[,] mineGrid;
-    private TileController[] mineTiles;
-    private List<TileController> nonMineTiles;
+    private Tile[] mineTiles;
+    private List<Tile> nonMineTiles;
     private int flaggedMines;
 
     // Use this for initialization
     void Start()
     {
-        tiles = new TileController[DIMENSIONS * DIMENSIONS];
-        grid = new TileController[DIMENSIONS, DIMENSIONS];
-        tilePositionMap = new Dictionary<TileController, Position>();
+        tiles = new Tile[DIMENSIONS * DIMENSIONS];
+        grid = new Tile[DIMENSIONS, DIMENSIONS];
+        tilePositionMap = new Dictionary<Tile, Position>();
         mineGrid = new int[DIMENSIONS, DIMENSIONS];
         flaggedMines = numMines;
         CreateTiles();
@@ -40,15 +40,15 @@ public class BoardController : MonoBehaviour
     {
     }
 
-    public void CompleteFirstTurn(TileController tile)
+    public void CompleteFirstTurn(Tile tile)
     {
         AssignMines(tile);
         state = State.Playing;
     }
 
-    public void Explode(TileController bombTile)
+    public void Explode(Tile bombTile)
     {
-        foreach (TileController tile in mineTiles)
+        foreach (Tile tile in mineTiles)
         {
             if (tile != bombTile)
             {
@@ -62,9 +62,9 @@ public class BoardController : MonoBehaviour
 
     public void CheckWin()
     {
-        foreach (TileController tile in nonMineTiles)
+        foreach (Tile tile in nonMineTiles)
         {
-            if (tile.state != TileController.State.Uncovered)
+            if (tile.state != Tile.State.Uncovered)
             {
                 return;
             }
@@ -74,7 +74,7 @@ public class BoardController : MonoBehaviour
         endgameText.text = "Congrats, You Win!";
     }
 
-    public int GetMineCount(TileController tile)
+    public int GetMineCount(Tile tile)
     {
         Position pos;
         tilePositionMap.TryGetValue(tile, out pos);
@@ -93,14 +93,14 @@ public class BoardController : MonoBehaviour
         SetMinesText();
     }
 
-    public void UncoverNeighbors(TileController tile)
+    public void UncoverNeighbors(Tile tile)
     {
         Position pos;
         tilePositionMap.TryGetValue(tile, out pos);
 
-        foreach (TileController neighborTile in Neighbors(pos))
+        foreach (Tile neighborTile in Neighbors(pos))
         {
-            if (neighborTile.state == TileController.State.Covered)
+            if (neighborTile.state == Tile.State.Covered)
             {
                 neighborTile.Uncover(true);
             }
@@ -119,7 +119,7 @@ public class BoardController : MonoBehaviour
             {
                 offset.x = transform.position.x - cameraOffset + TILE_OFFSET * x;
                 offset.y = transform.position.y - cameraOffset + TILE_OFFSET * y;
-                TileController tile = ((GameObject)Instantiate(tilePrefab, offset, transform.rotation)).GetComponent<TileController>();
+                Tile tile = ((GameObject)Instantiate(tilePrefab, offset, transform.rotation)).GetComponent<Tile>();
                 tile.transform.parent = transform;
                 tile.gameObject.SetActive(true);
                 tile.id = id;
@@ -131,12 +131,12 @@ public class BoardController : MonoBehaviour
         }
     }
 
-    private void AssignMines(TileController firstTile)
+    private void AssignMines(Tile firstTile)
     {
-        mineTiles = new TileController[numMines];
-        nonMineTiles = new List<TileController>();
+        mineTiles = new Tile[numMines];
+        nonMineTiles = new List<Tile>();
 
-        foreach (TileController tile in tiles)
+        foreach (Tile tile in tiles)
         {
             nonMineTiles.Add(tile);
         }
@@ -145,12 +145,12 @@ public class BoardController : MonoBehaviour
         for (int i = 0; i < numMines; i++)
         {
             int index = (int)Mathf.Round(Random.Range(0, nonMineTiles.Count));
-            TileController tile = nonMineTiles[index];
+            Tile tile = nonMineTiles[index];
             nonMineTiles.RemoveAt(index);
             tile.isMined = true;
             mineTiles[i] = tile;
         }
-        foreach (TileController tile in nonMineTiles)
+        foreach (Tile tile in nonMineTiles)
         {
             tile.isMined = false;
         }
@@ -174,7 +174,7 @@ public class BoardController : MonoBehaviour
     {
         int count = 0;
 
-        foreach (TileController tile in Neighbors(pos))
+        foreach (Tile tile in Neighbors(pos))
         {
             if (tile.isMined)
             {
@@ -185,9 +185,9 @@ public class BoardController : MonoBehaviour
         return count;
     }
 
-    private List<TileController> Neighbors(Position pos)
+    private List<Tile> Neighbors(Position pos)
     {
-        List<TileController> neighbors = new List<TileController>();
+        List<Tile> neighbors = new List<Tile>();
 
         for (int x = -1; x <= 1; x++)
         {
@@ -211,7 +211,7 @@ public class BoardController : MonoBehaviour
 
     private void PrintBoard()
     {
-        foreach (TileController tile in tiles)
+        foreach (Tile tile in tiles)
         {
             Debug.Log(tile.id + " (" + tile.GetHashCode() + "): " + tile.isMined);
         }

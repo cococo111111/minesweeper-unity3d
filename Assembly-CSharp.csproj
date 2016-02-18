@@ -48,9 +48,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\BoardController.cs" />
+     <Compile Include="Assets\Scripts\Board.cs" />
      <Compile Include="Assets\Scripts\Position.cs" />
-     <Compile Include="Assets\Scripts\TileController.cs" />
+     <Compile Include="Assets\Scripts\Tile.cs" />
  <Reference Include="UnityEngine.Networking">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
  </Reference>

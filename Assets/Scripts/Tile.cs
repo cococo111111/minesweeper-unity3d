@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class TileController : MonoBehaviour
+public class Tile : MonoBehaviour
 {
     public enum State { Covered, Flagged, Uncovered, Exploded };
     public int id { get; set; }
@@ -10,7 +10,7 @@ public class TileController : MonoBehaviour
 
     private SpriteRenderer spriteRenderer;
     private Dictionary<string, Sprite> spriteMap;
-    private BoardController board;
+    private Board board;
 
     // Use this for initialization
     void Start()
@@ -18,7 +18,7 @@ public class TileController : MonoBehaviour
         state = State.Covered;
         spriteRenderer = GetComponent<SpriteRenderer>();
         LoadSprites();
-        board = transform.parent.gameObject.GetComponent<BoardController>();
+        board = transform.parent.gameObject.GetComponent<Board>();
     }
 
     // Update is called once per frame
@@ -28,14 +28,14 @@ public class TileController : MonoBehaviour
 
     public void OnMouseOver()
     {
-        if (board.state != BoardController.State.Playing && board.state != BoardController.State.FirstTurn)
+        if (board.state != Board.State.Playing && board.state != Board.State.FirstTurn)
         {
             return;
         }
 
         if (Input.GetMouseButtonDown(0))
         {
-            if (board.state == BoardController.State.FirstTurn)
+            if (board.state == Board.State.FirstTurn)
             {
                 board.CompleteFirstTurn(this);
             }
