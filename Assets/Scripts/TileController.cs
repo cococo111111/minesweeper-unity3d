@@ -3,10 +3,11 @@ using System.Collections.Generic;
 
 public class TileController : MonoBehaviour
 {
+    public enum State { Covered, Flagged, Uncovered, Exploded };
     public int id { get; set; }
     public bool isMined { get; set; }
+    public State state;
 
-    private bool isFlagged = false;
     private SpriteRenderer spriteRenderer;
     private Dictionary<string, Sprite> spriteMap;
     private BoardController board;
@@ -14,6 +15,7 @@ public class TileController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        state = State.Covered;
         spriteRenderer = GetComponent<SpriteRenderer>();
         LoadSprites();
         board = transform.parent.gameObject.GetComponent<BoardController>();
@@ -60,12 +62,13 @@ public class TileController : MonoBehaviour
 
     private void Uncover()
     {
-        if (isFlagged)
+        if (state == State.Flagged)
         {
             Debug.Log("Can't click on flagged tiles.");
         }
         else if (isMined)
         {
+            state = State.Exploded;
             ReplaceSprite("tileExplosion");
             board.Explode(this);
         }
@@ -76,6 +79,7 @@ public class TileController : MonoBehaviour
             string[] words = { "Pressed", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight" };
             if (mines < 9)
             {
+                state = State.Uncovered;
                 spriteName += words[mines];
                 ReplaceSprite(spriteName);
             }
@@ -88,16 +92,16 @@ public class TileController : MonoBehaviour
 
     private void SetFlag()
     {
-        if (isFlagged)
+        if (state == State.Flagged)
         {
             board.IncrementMines();
-            isFlagged = false;
+            state = State.Covered;
             ReplaceSprite("tile");
         }
-        else
+        else if (state == State.Covered)
         {
             board.DecrementMines();
-            isFlagged = true;
+            state = State.Flagged;
             ReplaceSprite("tileFlag");
         }
     }
