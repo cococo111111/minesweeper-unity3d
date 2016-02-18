@@ -89,14 +89,14 @@ public class BoardController : MonoBehaviour
         SetMinesText();
     }
 
-    public void UncoverEmptyNeighbors(TileController tile)
+    public void UncoverNeighbors(TileController tile)
     {
         Position pos;
         tilePositionMap.TryGetValue(tile, out pos);
 
         foreach (TileController neighborTile in Neighbors(pos))
         {
-            if (GetMineCount(neighborTile) == 0 && neighborTile.state == TileController.State.Covered)
+            if (neighborTile.state == TileController.State.Covered)
             {
                 neighborTile.Uncover(true);
             }

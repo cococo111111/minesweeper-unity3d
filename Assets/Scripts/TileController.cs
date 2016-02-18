@@ -82,7 +82,7 @@ public class TileController : MonoBehaviour
                 ReplaceSprite(spriteName);
                 if (mines == 0)
                 {
-                    board.UncoverEmptyNeighbors(this);
+                    board.UncoverNeighbors(this);
                 }
                 board.CheckWin();
             }
