@@ -55,7 +55,11 @@ public class TileController : MonoBehaviour
 
     private void Uncover()
     {
-        if (isMined)
+        if (isFlagged)
+        {
+            Debug.Log("Can't click on flagged tiles.");
+        }
+        else if (isMined)
         {
             board.Explode();
         }
