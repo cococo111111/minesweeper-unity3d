@@ -67,7 +67,7 @@ public class TileController : MonoBehaviour
         {
             int mines = board.GetMineCount(this);
             string spriteName = "tile";
-            string[] words = {"", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight"};
+            string[] words = { "Pressed", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight" };
             if (mines < 9)
             {
                 spriteName += words[mines];
