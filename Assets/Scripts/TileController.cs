@@ -28,13 +28,17 @@ public class TileController : MonoBehaviour
 
     public void OnMouseOver()
     {
-        if (board.state != BoardController.State.Playing)
+        if (board.state != BoardController.State.Playing && board.state != BoardController.State.FirstTurn)
         {
             return;
         }
 
         if (Input.GetMouseButtonDown(0))
         {
+            if (board.state == BoardController.State.FirstTurn)
+            {
+                board.CompleteFirstTurn(this);
+            }
             Uncover();
         }
         else if (Input.GetMouseButtonDown(1))

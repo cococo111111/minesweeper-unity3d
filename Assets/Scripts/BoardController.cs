@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class BoardController : MonoBehaviour
 {
-    public enum State { Playing, Win, Lose };
+    public enum State { FirstTurn, Playing, Win, Lose };
     public GameObject tilePrefab;
     public Text minesText;
     public Text endgameText;
@@ -30,16 +30,20 @@ public class BoardController : MonoBehaviour
         mineGrid = new int[DIMENSIONS, DIMENSIONS];
         flaggedMines = numMines;
         CreateTiles();
-        AssignMines();
-        PrecomputeMineCount();
         SetMinesText();
         endgameText.text = "";
-        state = State.Playing;
+        state = State.FirstTurn;
     }
 
     // Update is called once per frame
     void Update()
     {
+    }
+
+    public void CompleteFirstTurn(TileController tile)
+    {
+        AssignMines(tile);
+        state = State.Playing;
     }
 
     public void Explode(TileController bombTile)
@@ -127,14 +131,16 @@ public class BoardController : MonoBehaviour
         }
     }
 
-    private void AssignMines()
+    private void AssignMines(TileController firstTile)
     {
         mineTiles = new TileController[numMines];
         nonMineTiles = new List<TileController>();
+
         foreach (TileController tile in tiles)
         {
             nonMineTiles.Add(tile);
         }
+        nonMineTiles.Remove(firstTile);
 
         for (int i = 0; i < numMines; i++)
         {
@@ -148,6 +154,9 @@ public class BoardController : MonoBehaviour
         {
             tile.isMined = false;
         }
+        nonMineTiles.Add(firstTile);
+
+        PrecomputeMineCount();
     }
 
     private void PrecomputeMineCount()
