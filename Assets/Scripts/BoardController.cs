@@ -8,7 +8,7 @@ public class BoardController : MonoBehaviour
     public Text minesText;
     public int numMines;
     const int DIMENSIONS = 10;
-    const float TILE_OFFSET = 0.5f;
+    const float TILE_OFFSET = 0.4f;
 
     private TileController[] tiles;
     private TileController[,] grid;
