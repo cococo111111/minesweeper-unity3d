@@ -62,7 +62,7 @@ public class TileController : MonoBehaviour
     {
         if (state == State.Flagged)
         {
-            Debug.Log("Can't click on flagged tiles.");
+            return;
         }
         else if (isMined && !empty)
         {
