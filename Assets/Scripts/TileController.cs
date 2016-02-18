@@ -53,11 +53,9 @@ public class TileController : MonoBehaviour
         }
     }
 
-    public void ReplaceSprite(string name)
+    public void MarkBomb()
     {
-        Sprite sprite;
-        spriteMap.TryGetValue(name, out sprite);
-        spriteRenderer.sprite = sprite;
+        ReplaceSprite("tileBombMark");
     }
 
     public void Uncover(bool empty = false)
@@ -93,6 +91,13 @@ public class TileController : MonoBehaviour
                 Debug.Log("Error, Can't have more than 8 mines: " + mines);
             }
         }
+    }
+
+    private void ReplaceSprite(string name)
+    {
+        Sprite sprite;
+        spriteMap.TryGetValue(name, out sprite);
+        spriteRenderer.sprite = sprite;
     }
 
     private void SetFlag()

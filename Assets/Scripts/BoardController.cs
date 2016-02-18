@@ -48,7 +48,7 @@ public class BoardController : MonoBehaviour
         {
             if (tile != bombTile)
             {
-                tile.ReplaceSprite("tileBombMark");
+                tile.MarkBomb();
             }
         }
 
