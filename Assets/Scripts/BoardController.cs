@@ -4,10 +4,12 @@ using System.Collections.Generic;
 
 public class BoardController : MonoBehaviour
 {
+    public enum State {Playing, Win, Lose};
     public GameObject tilePrefab;
     public Text minesText;
     public Text endgameText;
     public int numMines;
+    public State state;
     const int DIMENSIONS = 10;
     const float TILE_OFFSET = 0.4f;
 
@@ -31,6 +33,7 @@ public class BoardController : MonoBehaviour
         PrecomputeMineCount();
         SetMinesText();
         endgameText.text = "";
+        state = State.Playing;
     }
 
     // Update is called once per frame
@@ -49,6 +52,7 @@ public class BoardController : MonoBehaviour
         }
 
         endgameText.text = "Sorry, You Lose";
+        state = State.Lose;
     }
 
     public int GetMineCount(TileController tile)

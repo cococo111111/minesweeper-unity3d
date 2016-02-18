@@ -26,6 +26,11 @@ public class TileController : MonoBehaviour
 
     public void OnMouseOver()
     {
+        if (board.state != BoardController.State.Playing) {
+            Debug.Log("Can't play after game is done.");
+            return;
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
             Uncover();
